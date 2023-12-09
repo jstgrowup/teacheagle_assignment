@@ -8,10 +8,12 @@ export const POST = async (request: NextRequest) => {
   try {
     const reqBodyAwait = await request.json();
     const { name, password, email, isManager, userType } = reqBodyAwait;
-
     let existingUser = await User.findOne({ email: email });
     if (existingUser) {
-      return NextResponse.json({ error: "User ALready exists" });
+      return NextResponse.json(
+        { error: "User Already exists please login" },
+        { status: 400 }
+      );
     }
 
     const salt = await bcryptjs.genSalt(10);
@@ -23,14 +25,22 @@ export const POST = async (request: NextRequest) => {
       isManager,
       password: hashedPassword,
     });
-
+    if (!newUser) {
+      return NextResponse.json(
+        {
+          message: "User not created successfully",
+          success: false,
+        },
+        { status: 400 }
+      );
+    }
     return NextResponse.json({
       message: "User created successfully",
       success: true,
       newUser,
     });
   } catch (error: any) {
-    console.log("error:", error);
-    return NextResponse.json({ error: error.message, status: 500 });
+    console.log("error:here", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };

@@ -13,6 +13,10 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  orderStatus:{
+    type:String,
+    enum:["Order Placed","Shipped","Out for Delivery","Delivered","Returned","Refunded"]
+  }
 });
 const OrderModel =
   mongoose.models.order || mongoose.model("order", orderSchema);

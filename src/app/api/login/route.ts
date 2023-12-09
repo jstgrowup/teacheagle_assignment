@@ -9,7 +9,7 @@ export const POST = async (request: NextRequest) => {
   try {
     const reqBody = await request.json();
     const { email, password } = reqBody;
-    const foundUser = await User.findOne({ email });
+    const foundUser = await User.findOne({ email }).select("-password");
 
     if (!foundUser) {
       return NextResponse.json(
@@ -33,8 +33,9 @@ export const POST = async (request: NextRequest) => {
     });
     const response = NextResponse.json(
       {
-        message: "Login Successful",
+        message: "Login Successfull",
         success: true,
+        isManager: foundUser.isManager,
       },
       { status: 200 }
     );

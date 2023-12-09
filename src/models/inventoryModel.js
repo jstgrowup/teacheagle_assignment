@@ -25,8 +25,13 @@ const inventorySchema = new mongoose.Schema({
   },
   inStock: {
     type: Boolean,
-    default: false,
+    default: true,
+  },
+  stockQuantity: {
+    type: Number,
+    required: true,
   },
 });
-const User = mongoose.models.inventory || mongoose.model("inventory", inventorySchema);
-export default User;
+const Inventory =
+  mongoose.models.inventory || mongoose.model("inventory", inventorySchema);
+export default Inventory;
