@@ -9,7 +9,10 @@ export const POST = async (request: NextRequest) => {
   try {
     const reqBody = await request.json();
     const { email, password } = reqBody;
-    const foundUser = await User.findOne({ email }).select("-password");
+    console.log('password:', password)
+    console.log('email:', email)
+    const foundUser = await User.findOne({ email })
+    console.log('foundUser:', foundUser)
 
     if (!foundUser) {
       return NextResponse.json(
@@ -17,7 +20,10 @@ export const POST = async (request: NextRequest) => {
         { status: 400 }
       );
     }
+    console.log("here");
+    
     const validPassword = await bcryptjs.compare(password, foundUser.password);
+    console.log('validPassword:', validPassword)
     if (!validPassword) {
       return NextResponse.json({ error: "Invalid Password" }, { status: 400 });
     }
@@ -44,6 +50,7 @@ export const POST = async (request: NextRequest) => {
     });
     return response;
   } catch (error: any) {
+    console.log('error:', error)
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };

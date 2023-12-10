@@ -31,7 +31,8 @@ import axios from "axios";
 
 function Navbar() {
   const btnRef = React.useRef<any>();
-  const router=useRouter()
+  const router = useRouter();
+  const [bool, setbool] = useState(false);
   let [cartdata, setcartdata] = useState<any>([]);
   const [carttot, setcarttot] = useState<number>(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -40,34 +41,37 @@ function Navbar() {
   };
   const getCart = async () => {
     try {
-      const res = await axios.get(
-        ``
-      );
+      const res = await axios.get("/api/cart");
+
       const { data } = res;
-      setcartdata(data);
+      console.log("data:", data);
+      setcartdata(data?.cartItems);
       const FullPrice = cartdata.reduce((acc: number, el: any) => {
         const {
           product: { price },
           quantity,
         } = el;
-      return acc + Number(price) * quantity;
+        return acc + Number(price) * quantity;
       }, 0);
 
       setcarttot(FullPrice);
-    } catch (error:any) {
-    console.log('error:', error)
+    } catch (error: any) {
+      console.log("error:", error);
+    }
+  };
+  const updateProd = async (action: string, id: string) => {
+    try {
+      let response = await axios.put(`/api/cart/${id}?action=${action}`, {});
+      console.log("response:", response);
+      setbool(!bool);
+    } catch (error) {
+      console.log("error:", error);
     }
   };
   useEffect(() => {
     getCart();
-    const FullPrice = cartdata.reduce((acc: number, el: any) => {
-      const {
-        product: { price },
-        quantity,
-      } = el;
+  }, [bool]);
 
-      return acc + Number(price) * quantity;
-    }, 0);
   return (
     <div>
       <Flex
@@ -106,9 +110,12 @@ function Navbar() {
           </Button>
           <Button
             ref={btnRef}
-            colorScheme="#c02332"
+            size={"lg"}
+            variant={"none"}
+            fontFamily={"sans-serif"}
+            _hover={{ bg: "blue.300" }}
+            color={"white"}
             onClick={Onopenfun}
-            backgroundColor={"#c02332"}
           >
             Cart
           </Button>
@@ -148,18 +155,15 @@ function Navbar() {
                       borderWidth={0}
                       overflowX="auto"
                     >
-                      {cartdata.map((e) => (
-                        <Box w={"100%"} key={e.product._id}>
-                          <Box
-                            // h={"83px"}
-                            w={"100%"}
-                            bg={"#ffffff"}
-                            boxShadow={"rgb(170, 170, 170) 0px 1px 5px 0.25px"}
-                            borderRadius={"9.6px"}
-                          >
+                      {cartdata?.map((e: any) => (
+                        <Box w={"100%"} key={e._id}>
+                          <Box w={"100%"} bg={"#ffffff"} borderRadius={"9.6px"}>
                             <Flex>
-                              <Image w={"25%"} src={e.product.image} />
-
+                              <Image
+                                w={"25%"}
+                                src={e.productId.productImage}
+                                borderRadius={["lg", "lg", "", ""]}
+                              />
                               <Flex
                                 paddingLeft={"5px"}
                                 w={"75%"}
@@ -171,7 +175,7 @@ function Navbar() {
                                   lineHeight={"19.2px"}
                                   textAlign={"left"}
                                 >
-                                  {e.product.title}
+                                  {e.productId.productName}
                                 </Text>
                                 <Box
                                   display={"flex"}
@@ -185,7 +189,7 @@ function Navbar() {
                                   h={"32px"}
                                   w={"141px"}
                                 >
-                                  <Text>Weight :{e.product.weight}</Text>
+                                  <Text>Weight :{e.productId.weight}</Text>
                                 </Box>
 
                                 <Box>
@@ -195,7 +199,7 @@ function Navbar() {
                                     textAlign={"left"}
                                     color={"#000000"}
                                   >
-                                    ₹{e.product.price}
+                                    ₹{e.productId.price}
                                   </Text>
                                 </Box>
                                 <Flex
@@ -205,15 +209,12 @@ function Navbar() {
                                 >
                                   <Button
                                     onClick={() =>
-                                      updateProd("asc", e.product._id)
+                                      updateProd("CART_INCREASE", e._id)
                                     }
                                     color={"#ffffff"}
                                     fontWeight={"bold"}
                                     float={"right"}
-                                    boxShadow={
-                                      "rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px"
-                                    }
-                                    bg={"#b71c1c"}
+                                    bgColor={"#3d348b"}
                                     borderRadius={"2px"}
                                     fontSize={"14px"}
                                     lineHeight={"30px"}
@@ -224,15 +225,11 @@ function Navbar() {
                                   <Heading size={"md"}>{e.quantity}</Heading>
                                   <Button
                                     onClick={() =>
-                                      updateProd("desc", e.product._id)
+                                      updateProd("CART_DECREASE", e._id)
                                     }
                                     color={"#ffffff"}
                                     fontWeight={"bold"}
-                                    float={"right"}
-                                    boxShadow={
-                                      "rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px"
-                                    }
-                                    bg={"#b71c1c"}
+                                    bgColor={"#3d348b"}
                                     borderRadius={"2px"}
                                     fontSize={"14px"}
                                     lineHeight={"30px"}
@@ -242,12 +239,14 @@ function Navbar() {
                                     -
                                   </Button>
                                   <Button
-                                    onClick={() => deleteItem(e.product._id)}
-                                    color={"#ffffff"}
-                                    boxShadow={
-                                      "rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px"
+                                    onClick={() =>
+                                      updateProd("CART_DELETE", e._id)
                                     }
-                                    bg={"#b71c1c"}
+                                    variant={"none"}
+                                    bgColor={"#3d348b"}
+                                    fontFamily={"sans-serif"}
+                                    _hover={{ bg: "blue.300" }}
+                                    color={"white"}
                                   >
                                     Remove
                                   </Button>
@@ -260,37 +259,15 @@ function Navbar() {
                     </Flex>
                   </Box>
 
-                  <Box
-                    mt={"10px"}
-                    p={"5px"}
-                    h={"51px"}
-                    // w={"419px"}
-                    bg={"#2d9236"}
-                    color={"#f7f6f6"}
-                    fontSize={"14.4px"}
-                    lineHeight={"19.2px"}
-                    textAlign={"center"}
-                  >
-                    TenderCuts Elite Plan has been added to your cart, now enjoy
-                    Free delivery + product discounts.
-                  </Box>
-
                   <Flex justify={"space-between"}>
                     <Heading size={"md"}>Your Cart Total is</Heading>
                     <Heading size={"md"}> INR {carttot}</Heading>
                   </Flex>
-
-                  <Box>
-                    <AllcartItems />
-                  </Box>
                 </DrawerBody>
 
                 <DrawerFooter>
                   <Button variant="outline" mr={3} onClick={onClose}>
                     Cancel
-                  </Button>
-                  <Button colorScheme="blue">
-                    <PayButton />
                   </Button>
                 </DrawerFooter>
               </DrawerContent>
@@ -301,5 +278,4 @@ function Navbar() {
     </div>
   );
 }
-
 export default Navbar;

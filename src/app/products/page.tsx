@@ -1,6 +1,7 @@
 "use client";
 import CartButton from "@/components/cartButton";
 import Navbar from "@/components/navbar";
+
 import ProductCard from "@/components/productCard";
 import { Flex, SimpleGrid } from "@chakra-ui/react";
 import axios from "axios";
