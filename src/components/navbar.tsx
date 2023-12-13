@@ -28,8 +28,10 @@ import { BsSun, BsMoonStarsFill } from "react-icons/bs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import generateOrderId from "@/helpers/orderIdgenerator";
 
 function Navbar() {
+  const toast = useToast();
   const btnRef = React.useRef<any>();
   const router = useRouter();
   const [bool, setbool] = useState(false);
@@ -66,13 +68,32 @@ function Navbar() {
     getCart();
   }, [bool]);
   const placeOrder = async () => {
-    const cartdataIds = cartdata.map((item: any) => item._id);
-
-    const result = await axios.post("/api/order", {
-      cartIds: cartdataIds,
-      cartTotal: carttot,
-    });
-    console.log("result:", result);
+    try {
+      const orderId = generateOrderId();
+      const cartdataIds = cartdata.map((item: any) => item._id);
+      const result = await axios.post("/api/order", {
+        cartIds: cartdataIds,
+        cartTotal: carttot,
+        orderId,
+        transactionStatus:true
+      });
+      if (result) {
+        toast({
+          title: "Order has been created.",
+          description: "We've created your Order",
+          status: "success",
+          duration: 6000,
+          isClosable: true,
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: error.response.data,
+        status: "error",
+        duration: 6000,
+        isClosable: true,
+      });
+    }
   };
   return (
     <div>

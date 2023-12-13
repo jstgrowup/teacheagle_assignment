@@ -9,8 +9,15 @@ connect();
 export const POST = async (request: NextRequest) => {
   try {
     const reqBody = await request.json();
-    const { cartIds, cartTotal } = reqBody;
-    const result = await OrderModel.create({ cartIds, cartTotal });
+    const { cartIds, cartTotal, orderId } = reqBody;
+    const duplicateOrder = await OrderModel.findOne({
+      cartIds: { $in: cartIds },
+    });
+    
+    if (duplicateOrder) {
+      return NextResponse.json("Duplicate Order exists", { status: 400 });
+    }
+    const result = await OrderModel.create({ cartIds, cartTotal, orderId });
     // await CartModel.deleteMany({ _id: { $in: cartIds } });
     return NextResponse.json(
       {
@@ -21,6 +28,7 @@ export const POST = async (request: NextRequest) => {
       { status: 200 }
     );
   } catch (error: any) {
+    console.log("error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };
