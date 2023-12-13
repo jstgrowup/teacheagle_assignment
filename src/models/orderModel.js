@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 const orderSchema = new mongoose.Schema({
-  cartId: {
+  cartIds: [{
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-  },
+    ref:"carts"
+  }],
   transactionStatus: {
     type: Boolean,
     required: true,
@@ -15,7 +16,8 @@ const orderSchema = new mongoose.Schema({
   },
   orderStatus:{
     type:String,
-    enum:["Order Placed","Shipped","Out for Delivery","Delivered","Returned","Refunded"]
+    enum:["Order Placed","Shipped","Out for Delivery","Delivered","Returned","Refunded"],
+    default:"Order Placed"
   }
 });
 const OrderModel =

@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 const getProducts = async () => {
   try {
     const result = await axios.get("/api/inventory");
+
     return result?.data?.data;
   } catch (error) {
     return error;
@@ -22,10 +23,14 @@ function Products() {
       .catch((err) => console.log(err));
   }, []);
 
+  async function AddToCart(productId: any) {
+    console.log("productId:", productId);
+    const res = await axios.post("/api/cart", { productId });
+    console.log("res:", res);
+  }
   return (
     <>
-      <Navbar />
-
+    <Navbar />
       <Flex direction={"column"} mt={10}>
         <Flex
           gap={"6"}
@@ -42,7 +47,11 @@ function Products() {
             gap={"12"}
           >
             {data?.map((item: any) => {
-              return <ProductCard {...item} />;
+              return (
+                <div key={item._id}>
+                  <ProductCard {...item} AddToCart={AddToCart} />
+                </div>
+              );
             })}
           </SimpleGrid>
         </Flex>

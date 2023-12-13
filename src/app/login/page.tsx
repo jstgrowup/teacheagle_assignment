@@ -35,7 +35,6 @@ function Signin() {
     setformData({ ...formData, [name]: value });
   };
   const postUser = async () => {
-    console.log("formData:", formData);
     const { email, password } = formData;
     if (!email || !password) {
       alert("All fields are required");
@@ -46,7 +45,9 @@ function Signin() {
       console.log("res:", res);
       setloading(false);
       if (res.data.isManager) {
-        router.push("/manager");
+        router.push("/manager/orders");
+      } else {
+        router.push("/products");
       }
     } catch (e: any) {
       console.log("e:", e);
@@ -112,11 +113,11 @@ function Signin() {
               isLoading={loading}
               loadingText={"Submitting"}
               onClick={handleSubmit}
-              _hover={{ bg: "#24AEB1" }}
               color={"white"}
               size={"lg"}
               width={"100%"}
-              bg={"#24AEB1"}
+              bg={"#3d348b"}
+              _hover={{ backgroundColor: "#C11C2D" }}
             >
               Log In
             </Button>

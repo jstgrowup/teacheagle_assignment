@@ -1,6 +1,6 @@
 import { Box, Button, Heading } from "@chakra-ui/react";
 
-function CartButton() {
+function CartButton(AddToCart:any) {
   return (
     <Box>
       <Button bg={"#3d348b"} _hover={{ backgroundColor: "#C11C2D" }}>

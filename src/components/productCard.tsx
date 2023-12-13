@@ -1,8 +1,24 @@
 import React from "react";
-import { Box, Flex, Heading, Image, SimpleGrid, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Image,
+  SimpleGrid,
+  Text,
+} from "@chakra-ui/react";
 import CartButton from "./cartButton";
 // https://assets.tendercuts.in/product/P/R/63c42955-a41b-45ce-98e1-cb7510eeac4f.jpg
-function ProductCard({ productImage, productName, weight, price, _id }: any) {
+function ProductCard({
+  _id,
+  productImage,
+  productName,
+  weight,
+  price,
+
+  AddToCart,
+}: any) {
   return (
     <Box
       _hover={{ transform: "scale(1.01)" }}
@@ -42,7 +58,17 @@ function ProductCard({ productImage, productName, weight, price, _id }: any) {
             </Text>
           </Flex>
 
-          <CartButton />
+          <Box>
+            <Button
+              bg={"#3d348b"}
+              _hover={{ backgroundColor: "#C11C2D" }}
+              onClick={() => AddToCart(_id)}
+            >
+              <Heading size={"sm"} color={"white"}>
+                ADD TO CART
+              </Heading>{" "}
+            </Button>
+          </Box>
         </Flex>
       </Box>
     </Box>

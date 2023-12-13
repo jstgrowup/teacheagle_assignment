@@ -34,7 +34,7 @@ function Navbar() {
   const router = useRouter();
   const [bool, setbool] = useState(false);
   let [cartdata, setcartdata] = useState<any>([]);
-  const [carttot, setcarttot] = useState<number>(0);
+  const [carttot, setcarttot] = useState<number>(1);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const Onopenfun = () => {
     onOpen();
@@ -42,16 +42,11 @@ function Navbar() {
   const getCart = async () => {
     try {
       const res = await axios.get("/api/cart");
-
       const { data } = res;
-      console.log("data:", data);
+
       setcartdata(data?.cartItems);
-      const FullPrice = cartdata.reduce((acc: number, el: any) => {
-        const {
-          product: { price },
-          quantity,
-        } = el;
-        return acc + Number(price) * quantity;
+      const FullPrice = data?.cartItems?.reduce((acc: number, el: any) => {
+        return acc + Number(el.productId.price) * el.quantity;
       }, 0);
 
       setcarttot(FullPrice);
@@ -61,8 +56,7 @@ function Navbar() {
   };
   const updateProd = async (action: string, id: string) => {
     try {
-      let response = await axios.put(`/api/cart/${id}?action=${action}`, {});
-      console.log("response:", response);
+      await axios.put(`/api/cart/${id}?action=${action}`, {});
       setbool(!bool);
     } catch (error) {
       console.log("error:", error);
@@ -71,7 +65,15 @@ function Navbar() {
   useEffect(() => {
     getCart();
   }, [bool]);
+  const placeOrder = async () => {
+    const cartdataIds = cartdata.map((item: any) => item._id);
 
+    const result = await axios.post("/api/order", {
+      cartIds: cartdataIds,
+      cartTotal: carttot,
+    });
+    console.log("result:", result);
+  };
   return (
     <div>
       <Flex
@@ -266,8 +268,18 @@ function Navbar() {
                 </DrawerBody>
 
                 <DrawerFooter>
-                  <Button variant="outline" mr={3} onClick={onClose}>
-                    Cancel
+                  <Button
+                    variant="outline"
+                    mr={3}
+                    w={"95%"}
+                    border={"2px"}
+                    bgColor={"#3d348b"}
+                    fontFamily={"sans-serif"}
+                    _hover={{ bg: "blue.400" }}
+                    color={"white"}
+                    onClick={placeOrder}
+                  >
+                    Place Order
                   </Button>
                 </DrawerFooter>
               </DrawerContent>

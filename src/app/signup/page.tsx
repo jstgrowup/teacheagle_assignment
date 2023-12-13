@@ -18,6 +18,7 @@ import axios from "axios";
 
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 function Signup() {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
@@ -45,13 +46,11 @@ function Signup() {
     try {
       setloading(true);
       const res = await axios.post("/api/signup", formData);
-      console.log("res:", res);
       setloading(false);
       router.push("/login");
     } catch (e: any) {
       console.log("e:", e);
       alert(e.response.data.error);
-
       setloading(false);
     }
   };
@@ -110,7 +109,7 @@ function Signup() {
               {show ? <ViewIcon boxSize={5} /> : <ViewOffIcon boxSize={5} />}
             </InputRightElement>
           </InputGroup>
-
+          <Link href={"/login"}>Already have and accout? login</Link>
           <Button
             isLoading={loading}
             loadingText={"Submitting"}
@@ -118,8 +117,7 @@ function Signup() {
             color={"white"}
             size={"lg"}
             width={"100%"}
-            _hover={{ bg: "#24AEB1" }}
-            bg={"#24AEB1"}
+            bg={"#3d348b"} _hover={{ backgroundColor: "#C11C2D" }}
           >
             Signup
           </Button>

@@ -1,23 +1,16 @@
 import { connect } from "@/dbConfig/dbConfig";
 import CartModel from "@/models/cartModel";
-import UserModel from "@/models/userModel";
 import { cookies } from "next/headers";
-
 import { NextRequest, NextResponse } from "next/server";
-import bcryptjs from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
-
 connect();
 export const POST = async (request: NextRequest) => {
   try {
-    const { productId, quantity } = await request.json();
+    const { productId } = await request.json();
     const cookieStore = cookies();
     const token =
       cookieStore.get("token")?.value || request.headers.get("token") || "";
-    console.log("token:", token);
     const userFromToken: any = await getDataFromToken(token);
-    console.log('userFromToken:', userFromToken)
     if (!userFromToken) {
       NextResponse.json(
         {
@@ -28,20 +21,22 @@ export const POST = async (request: NextRequest) => {
       );
     }
     const { userId, name, email, isManager }: any = userFromToken;
+
     const existingProduct = await CartModel.findOne({
-      producId: productId,
+      productId: productId,
       userId: userId,
     });
+    console.log("existingProduct:", existingProduct);
     if (existingProduct) {
       return NextResponse.json(
         {
           message: "Prouct Already in cart",
           success: true,
         },
-        { status: 400 }
+        { status: 200 }
       );
     }
-    await CartModel.create({ productId, quantity, userId });
+    await CartModel.create({ productId, userId });
     // await CartModel.findByIdAndUpdate(cartItems.id, {
     //   $set: { quantity: cartItems.quantity + 1 },
     // });
@@ -57,9 +52,10 @@ export const POST = async (request: NextRequest) => {
 export const GET = async (request: NextRequest) => {
   try {
     const cookieStore = cookies();
-    const userFromToken: any = getDataFromToken(
+    const userFromToken: any = await getDataFromToken(
       cookieStore.get("token")?.value || request.headers.get("token") || ""
     );
+    console.log("userFromToken:", userFromToken);
     const cartItems = await CartModel.find({
       userId: userFromToken.userId,
     }).populate("productId");
