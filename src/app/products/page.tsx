@@ -1,9 +1,8 @@
 "use client";
-import CartButton from "@/components/cartButton";
-import Navbar from "@/components/navbar";
 
+import Navbar from "@/components/navbar";
 import ProductCard from "@/components/productCard";
-import { Flex, SimpleGrid } from "@chakra-ui/react";
+import { Flex, SimpleGrid, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 const getProducts = async () => {
@@ -16,16 +15,25 @@ const getProducts = async () => {
   }
 };
 function Products() {
+  const toast = useToast();
   const [data, setdata] = useState<any>([]);
+  const [bool, setbool] = useState(false);
   useEffect(() => {
     getProducts()
       .then((res) => setdata(res))
       .catch((err) => console.log(err));
-  }, []);
+  }, [bool]);
 
   async function AddToCart(productId: any) {
     try {
       await axios.post("/api/cart", { productId });
+      setbool(!bool);
+      toast({
+        title: "Product Added To cart",
+        status: "success",
+        duration: 6000,
+        isClosable: true,
+      });
     } catch (error) {
       console.log("error:", error);
     }

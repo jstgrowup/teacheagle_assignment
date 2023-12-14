@@ -45,7 +45,6 @@ function Navbar() {
     try {
       const res = await axios.get("/api/cart");
       const { data } = res;
-
       setcartdata(data?.cartItems);
       const FullPrice = data?.cartItems?.reduce((acc: number, el: any) => {
         return acc + Number(el.productId.price) * el.quantity;
