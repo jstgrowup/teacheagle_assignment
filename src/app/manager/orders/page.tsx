@@ -28,7 +28,6 @@ function ManagerOrders() {
 
       setOrderdata(data);
     } catch (error: any) {
-      console.log("error:", error);
     }
   };
   const changeOrderStatus = async (orderId: string, orderStatus: string) => {
@@ -43,7 +42,6 @@ function ManagerOrders() {
       });
       setorderStatus(orderStatus);
     } catch (error) {
-      console.log("error:", error);
     }
   };
   useEffect(() => {

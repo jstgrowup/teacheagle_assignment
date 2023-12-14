@@ -42,7 +42,6 @@ function Signin() {
     try {
       setloading(true);
       const res = await axios.post("/api/login", formData);
-      console.log("res:", res);
       setloading(false);
       if (res.data.isManager) {
         router.push("/manager/orders");
@@ -50,7 +49,6 @@ function Signin() {
         router.push("/products");
       }
     } catch (e: any) {
-      console.log("e:", e);
       alert(e.response.data.error);
 
       setloading(false);

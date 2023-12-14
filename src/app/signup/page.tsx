@@ -38,7 +38,6 @@ function Signup() {
     setformData({ ...formData, [name]: value });
   };
   const postUser = async () => {
-    console.log("formData:", formData);
     const { email, password } = formData;
     if (!email || !password) {
       alert("All fields are required");
@@ -49,7 +48,6 @@ function Signup() {
       setloading(false);
       router.push("/login");
     } catch (e: any) {
-      console.log("e:", e);
       alert(e.response.data.error);
       setloading(false);
     }

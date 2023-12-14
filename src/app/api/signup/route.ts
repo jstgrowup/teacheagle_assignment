@@ -40,7 +40,6 @@ export const POST = async (request: NextRequest) => {
       newUser,
     });
   } catch (error: any) {
-    console.log("error:here", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };

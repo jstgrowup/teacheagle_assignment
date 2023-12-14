@@ -26,7 +26,7 @@ export const PUT = async (request: NextRequest, { params }: any) => {
               success: true,
             });
           } catch (error) {
-            console.log("error:", error);
+       
           }
         }
         case "CART_DECREASE": {
@@ -41,7 +41,7 @@ export const PUT = async (request: NextRequest, { params }: any) => {
               success: true,
             });
           } catch (error) {
-            console.log("error:", error);
+           
           }
         }
         case "CART_DELETE": {
@@ -53,7 +53,7 @@ export const PUT = async (request: NextRequest, { params }: any) => {
               success: true,
             });
           } catch (error) {
-            console.log("error:", error);
+         
           }
         }
         default:
@@ -69,7 +69,7 @@ export const PUT = async (request: NextRequest, { params }: any) => {
       success: true,
     });
   } catch (error: any) {
-    console.log("error:", error);
+
     return NextResponse.json({ error: error.message, status: 500 });
   }
 };

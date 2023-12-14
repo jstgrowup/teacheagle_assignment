@@ -26,7 +26,7 @@ export const POST = async (request: NextRequest) => {
       productId: productId,
       userId: userId,
     });
-    console.log("existingProduct:", existingProduct);
+  
     if (existingProduct) {
       return NextResponse.json(
         {
@@ -45,7 +45,7 @@ export const POST = async (request: NextRequest) => {
       success: true,
     });
   } catch (error: any) {
-    console.log("error:", error);
+
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };
@@ -55,7 +55,7 @@ export const GET = async (request: NextRequest) => {
     const userFromToken: any = await getDataFromToken(
       cookieStore.get("token")?.value || request.headers.get("token") || ""
     );
-    console.log("userFromToken:", userFromToken);
+
     const cartItems = await CartModel.find({
       userId: userFromToken.userId,
     }).populate("productId");
@@ -65,7 +65,7 @@ export const GET = async (request: NextRequest) => {
       cartItems,
     });
   } catch (error: any) {
-    console.log("error:", error);
+
     return NextResponse.json({ error: error.message, status: 500 });
   }
 };

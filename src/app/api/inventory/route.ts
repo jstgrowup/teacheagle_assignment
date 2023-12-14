@@ -43,7 +43,7 @@ export const POST = async (request: NextRequest) => {
       data,
     });
   } catch (error: any) {
-    console.log("error:", error);
+    
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 };
@@ -55,7 +55,6 @@ export const GET = async () => {
       data,
     });
   } catch (error: any) {
-    console.log("error:", error);
     return NextResponse.json({ error: error.message, status: 500 });
   }
 };

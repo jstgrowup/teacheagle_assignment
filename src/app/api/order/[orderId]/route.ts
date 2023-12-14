@@ -13,7 +13,6 @@ export const PUT = async (request: NextRequest, { params }: any) => {
     });
     return NextResponse.json("Status updated successfully", { status: 200 });
   } catch (error: any) {
-    console.log("error:", error);
     return NextResponse.json(error.message, { status: 500 });
   }
 };

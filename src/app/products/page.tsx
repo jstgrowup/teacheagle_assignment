@@ -24,13 +24,15 @@ function Products() {
   }, []);
 
   async function AddToCart(productId: any) {
-    console.log("productId:", productId);
-    const res = await axios.post("/api/cart", { productId });
-    console.log("res:", res);
+    try {
+      await axios.post("/api/cart", { productId });
+    } catch (error) {
+      console.log("error:", error);
+    }
   }
   return (
     <>
-    <Navbar />
+      <Navbar />
       <Flex direction={"column"} mt={10}>
         <Flex
           gap={"6"}
