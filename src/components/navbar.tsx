@@ -29,8 +29,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import generateOrderId from "@/helpers/orderIdgenerator";
+import { useGLobalContext } from "@/app/Context/contextStore";
 
 function Navbar() {
+  const { change } = useGLobalContext();
+  
+
   const toast = useToast();
   const btnRef = React.useRef<any>();
   const router = useRouter();
@@ -65,7 +69,7 @@ function Navbar() {
   };
   useEffect(() => {
     getCart();
-  }, [bool]);
+  }, [bool,change]);
   const placeOrder = async () => {
     try {
       const orderId = generateOrderId();
@@ -74,7 +78,7 @@ function Navbar() {
         cartIds: cartdataIds,
         cartTotal: carttot,
         orderId,
-        transactionStatus:true
+        transactionStatus: true,
       });
       if (result) {
         toast({

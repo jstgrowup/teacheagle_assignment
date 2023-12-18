@@ -5,6 +5,7 @@ import ProductCard from "@/components/productCard";
 import { Flex, SimpleGrid, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useGLobalContext } from "../Context/contextStore";
 const getProducts = async () => {
   try {
     const result = await axios.get("/api/inventory");
@@ -15,6 +16,7 @@ const getProducts = async () => {
   }
 };
 function Products() {
+  const { change, setchange } = useGLobalContext();
   const toast = useToast();
   const [data, setdata] = useState<any>([]);
   const [bool, setbool] = useState(false);
@@ -34,6 +36,7 @@ function Products() {
         duration: 6000,
         isClosable: true,
       });
+      setchange(!change);
     } catch (error) {
       console.log("error:", error);
     }
